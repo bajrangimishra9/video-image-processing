@@ -1,0 +1,46 @@
+import cv2
+import os
+
+
+def video_to_frames(video_path, output_folder, interval=1):
+    # Check if the output folder exists, if not, create it
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # Load the video
+    cap = cv2.VideoCapture(video_path)
+    if not cap.isOpened():
+        print("Error: Could not open video.")
+        return
+
+    # Get the frames per second (fps) of the video
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    frame_count = 0
+    sec_count = 0
+
+    while True:
+        # Set the position of the video in milliseconds
+        cap.set(cv2.CAP_PROP_POS_MSEC, sec_count * 1000)
+
+        # Read a frame from the video
+        ret, frame = cap.read()
+
+        # If the frame was not retrieved successfully, we're at the end of the video
+        if not ret:
+            break
+
+        # Create the filename and save the frame as an image
+        frame_filename = os.path.join(output_folder, f"frame_{frame_count:05d}.jpg")
+        cv2.imwrite(frame_filename, frame)
+
+        frame_count += 1
+        sec_count += interval
+
+    cap.release()
+    print(f"Extracted {frame_count} frames from the video.")
+
+
+# Example usage:
+video_path = 'testvideo.mp4'
+output_folder = 'beam_images'
+video_to_frames(video_path, output_folder)
