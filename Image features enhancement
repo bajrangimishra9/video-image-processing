@@ -1,0 +1,24 @@
+% Read the image
+A = imread('/MATLAB Drive/speckle_images_grey/00003_1.jpg');
+
+% Enhance the image by adjusting the contrast
+A = imadjust(A);
+
+% Apply histogram equalization to enhance features
+A = histeq(A);
+
+% Basic thresholding to select objects
+mk = A > 159;
+
+% Fill any holes in objects
+mk = imfill(mk, 'holes');
+
+% Add black overlay on background region
+bgcolor = [0 0 0]; % black
+outpict = imoverlay(A, ~mk, bgcolor);
+
+% Display the resulting image
+imshow(outpict)
+
+% Save the output image to a new file
+imwrite(outpict, '/MATLAB Drive/speckle_images_grey/00003_1.jpg');
