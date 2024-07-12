@@ -1,0 +1,49 @@
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+def add_speckle_noise(image, mean=0, var=0.4):  # change the var value to change intensity of speckle noise
+    """
+    Add speckle noise to an image.
+
+    Parameters:
+    image: numpy array
+        Input image.
+    mean: float
+        Mean of the Gaussian noise.
+    var: float
+        Variance of the Gaussian noise.
+
+    Returns:
+    noisy_image: numpy array
+        Image with added speckle noise.
+    """
+    row, col, ch = image.shape
+    sigma = var**0.5
+    gauss = np.random.normal(mean, sigma, (row, col, ch))
+    gauss = gauss.reshape(row, col, ch)
+    noisy_image = image + image * gauss
+    noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
+    return noisy_image
+
+# Load an image
+image_path = '/content/00003_1111.jpg'  # Replace with your image path
+image = cv2.imread(image_path)
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Add speckle noise to the image
+noisy_image = add_speckle_noise(image)
+
+# Plot the original and noisy images
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.title("Original Image")
+plt.imshow(image)
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.title("Image with Speckle Noise")
+plt.imshow(noisy_image)
+plt.axis('off')
+
+plt.show()
