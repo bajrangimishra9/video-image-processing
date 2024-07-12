@@ -1,0 +1,20 @@
+import shutil
+from google.colab import files
+
+def zip_and_download_folder(folder_path, output_filename):
+    """
+    Zip the specified folder and download it.
+
+    Parameters:
+    folder_path: str
+        Path to the folder you want to download.
+    output_filename: str
+        Name of the output zip file.
+    """
+    shutil.make_archive(output_filename, 'zip', folder_path)
+    files.download(output_filename + '.zip')
+
+# Example usage
+folder_path = '/home/result'  # Replace with your folder path
+output_filename = 'speckle_images_new'  # Replace with the desired output filename
+zip_and_download_folder(folder_path, output_filename)
